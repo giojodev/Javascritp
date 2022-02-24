@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css">
     <link rel="stylesheet" id="theme" type="text/css" href="css/green.css">
     
+    
+
    
     <!--Slider-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
@@ -82,6 +84,36 @@
     </section>
     <footer id="footer">Master de JavaScript
         <a href="#" class="subir">Ir arriba</a>
+        <button id="botonimprimir">Imprimir</button>
+        <a href="#" id="linkdescarga" style="display: none;">Link descarga</a>
     </footer>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.1/dist/html2canvas.min.js"></script>
+    <script>
+        const $boton=document.querySelector("#botonimprimir"),
+        $objetivo=document.querySelector("#login");
+        
+        $boton.addEventListener("click",()=>{
+            // var enlaceweb=document.querySelector("#linkdescarga")
+            // enlace
+            // document.querySelector("#linkdescarga").style.display ="block";
+            html2canvas($objetivo).then(canvas=>{
+                let enlace=document.createElement("a")
+                enlace.download=canvas.toDataURL();
+                link=canvas.toDataURL();
+                // console.log(link)
+                // enlace.click();
+                // enlaceweb.href=enlace.download
+                //alert(link);
+
+                let w=window.open('about:blank')
+                let image=new Image();
+                image.src=canvas.toDataURL()
+                setTimeout(() => {
+                    w.document.write(image.outerHTML)
+                }, 0);
+                //window.open(enlace.download,"Impresion de comentarios", "width=500, height=450");
+            })
+        })
+    </script>
 </body>
 </html>

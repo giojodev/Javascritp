@@ -1,7 +1,8 @@
 'use strict'
 
-const { param } = require('../app');
+// const { param } = require('../app');
 var Project= require('../models/project');
+var fs=require('fs');
 
 var controller={
     
@@ -58,7 +59,7 @@ var controller={
 
             return res.status(200).send({
                 project
-            })
+            });
 
         });
     },
@@ -71,7 +72,7 @@ var controller={
 
             return res.status(200).send({
                 projects
-            })
+            });
         });
     },
     updateProject:function(req,res){
@@ -85,9 +86,56 @@ var controller={
 
             return res.status(200).send({
                 projectupdate
-            })
+            });
         });
+    },
+    deleteProject:function(req,res){
+        var projectId=req.params.id;
+        
+        Project.findByIdAndRemove(projectId,(err,projectDelete)=>{
+            if(err) return res.status(500).send({message:"Error al borrar los datos."});
 
+            if(!projectDelete) return res.status(404).send({message:"No existe el proyecto para borrar."});
+
+            return res.status(200).send({
+                project:projectDelete
+            });
+        })
+    },
+    uploadImage:function(req,res){
+        var projectId=req.params.id;
+        
+        var filename='Imagen no subida...';
+
+        if(req.files){
+            var filePath=req.files.image.path;
+            var fileSplit=filePath.split('\\');
+            var fileName=fileSplit[1];
+            var extSplit= fileName.split('\.');
+            var fileExt=extSplit[1];
+
+            if(fileExt=='png' || fileExt=='jpg' || fileExt=='jpeg' || fileExt=='gif'){
+                Project.findByIdAndUpdate(projectId,{image:fileName},{new:true},(err,projectUpdated)=>{
+                    if(err) return res.status(200).send({
+                        message:"La imagen no se ha subido"
+                    })
+                    if(!projectUpdated) return res.status(404).send({send:"La imagen no existe"});
+    
+                    return res.status(200).send({
+                        projectUpdated
+                    })
+                })
+            }else{
+                fs.unlink(filePath,(err)=>{
+                    return res.status(200).send({message:'La extension no es valida'});
+                })
+            }
+        }
+        else{
+            return res.status(200).send({
+                message:filename  
+            })
+        }
     }
 
 };

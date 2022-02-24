@@ -1,0 +1,48 @@
+<!-- /*
+    En angular se utilizan pipe para realizar funciones como si fueran filtros
+    garantizado de una forma optima y mas rapida la configuracion de elementos
+    a mostrar de cara en el navegador
+*/ -->
+{{fecha|date:'dd/MM/yy'}}<br>
+{{fecha|date:'fullDate' | uppercase}}<br>
+{{'HOLA MUNDO PIPES' | lowercase}}<br>
+{{4 | calculadora :2}}
+<hr>
+
+<input type="text" [(ngModel)]="userId" id="" (keyup.enter)="cargaUsuario()">
+
+<div *ngIf="!user">
+    Cargando...
+</div>
+
+<div *ngIf="user">
+    <img src="{{user.avatar}}" width="200 px">
+    <h2>{{user.first_name + ' ' + user.last_name}}</h2>
+</div>
+<hr>
+
+<h2>Crear usuario</h2>
+
+<form #newUser="ngForm" (ngSubmit)="onSubmit(newUser)">
+    <p>
+        <label for="name">Nombre</label>
+        <input type="text" name="name" required #name="ngModel" [(ngModel)]="new_User.name">
+        <span *ngIf="name.touched && !name.valid"> 
+            El nombre no es valido
+        </span> 
+    </p>
+    <br>
+    <p>
+        <label for="job">Nombre</label>
+        <input type="text" name="job" #job="ngModel" [(ngModel)]="new_User.job" required>
+        <span *ngIf="job.touched && !job.valid"> 
+            El job no es valido
+        </span> 
+    </p>
+    <input type="submit" value="Guardar Usuario" [disabled]="!newUser.form.valid">
+</form>
+
+<div *ngIf="usuario_guardado">
+        <h3>{{usuario_guardado.name}}</h3>
+        <h4>{{usuario_guardado.job}}</h4>
+</div>
